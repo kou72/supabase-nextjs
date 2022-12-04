@@ -5,16 +5,29 @@ export default function Auth() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
 
-  const handleLogin = async (email: string) => {
+  const handleSingUp = async (email: string) => {
     try {
       setLoading(true)
-      // const { error } = await supabase.auth.signIn({ email })
       const { error } = await supabase.auth.signUp({
         email: email,
         password: 'password',
       })
       if (error) throw error
       alert('Check your email for the login link!')
+    } catch (error: any) {
+      alert(error.error_description || error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSingIn = async (email: string) => {
+    try {
+      setLoading(true)
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'password',
+      })
     } catch (error: any) {
       alert(error.error_description || error.message)
     } finally {
@@ -42,12 +55,22 @@ export default function Auth() {
           <button
             onClick={(e) => {
               e.preventDefault()
-              handleLogin(email)
+              handleSingUp(email)
             }}
             className="button block"
             disabled={loading}
           >
             <span>{loading ? 'Loading' : 'Send magic link'}</span>
+          </button>
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              handleSingIn(email)
+            }}
+            className="button block"
+            disabled={loading}
+          >
+            <span>{loading ? 'Loading' : 'singin'}</span>
           </button>
         </div>
       </div>
