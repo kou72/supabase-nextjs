@@ -9,6 +9,8 @@ services:
     volumes:
       - ./nextjs:/app
       - node_modules_volume:/app/node_modules
+    stdin_open: true
+    tty: true
 
 volumes:
   node_modules_volume:

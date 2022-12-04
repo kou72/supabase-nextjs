@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
+import Avatar from './Avatar'
 import type { Session } from '@supabase/supabase-js'
 
 interface sessionObj {
@@ -19,7 +20,6 @@ export default function Account({ session }: sessionObj) {
   async function getProfile() {
     try {
       setLoading(true)
-      // const user = supabase.auth.user()
       const user = (await supabase.auth.getUser()).data.user
       if (!user) throw 'error'
 
@@ -69,9 +69,6 @@ export default function Account({ session }: sessionObj) {
         updated_at: new Date(),
       }
 
-      // let { error } = await supabase.from('profiles').upsert(updates, {
-      //   returning: 'minimal', // Don't return the value after inserting
-      // })
       let { error } = await supabase.from('profiles').upsert(updates)
 
       if (error) {
@@ -86,6 +83,14 @@ export default function Account({ session }: sessionObj) {
 
   return (
     <div className="form-widget">
+      <Avatar
+        url={avatar_url}
+        size={150}
+        onUpload={(url) => {
+          setAvatarUrl(url)
+          updateProfile({ username, website, avatar_url: url })
+        }}
+      />
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={session.user.email} disabled />
